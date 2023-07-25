@@ -1,0 +1,73 @@
+---
+- name: Dapr pub-sub component install
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Component
+    state: present
+    definition:
+      apiVersion: dapr.io/v1alpha1
+      kind: Component
+      metadata:
+        name: pubsub
+        namespace: default
+      spec:
+        type: pubsub.redis
+        version: v1
+        metadata:
+          - name: redisHost
+            value: redis-master.default.svc.cluster.local:6379
+          - name: redisPassword
+            secretKeyRef:
+              name: redis
+              key: redis-password
+  tags:
+    - dapr-components-install
+
+- name: Dapr state component install
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Component
+    state: present
+    definition:
+      apiVersion: dapr.io/v1alpha1
+      kind: Component
+      metadata:
+        name: statestore
+        namespace: default
+      spec:
+        type: state.redis
+        version: v1
+        metadata:
+          - name: redisHost
+            value: redis-master.default.svc.cluster.local:6379
+          - name: redisPassword
+            secretKeyRef:
+              name: redis
+              key: redis-password
+  tags:
+    - dapr-components-install
+
+- name: Dapr zipkin configuration
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Configuration
+    state: present
+    definition:
+      apiVersion: dapr.io/v1alpha1
+      kind: Configuration
+      metadata:
+        name: tracing
+        namespace: default
+      spec:
+        tracing:
+          samplingRate: '1'
+          zipkin:
+            endpointAddress: 'http://zipkin.zipkin.svc.cluster.local:9411/api/v2/spans'
+        tags:
+          - dapr-components-install
+
+- name: Dapr installation finished
+  debug:
+    msg: 'Dapr components installation finished.'
+  tags:
+    - dapr-components-install

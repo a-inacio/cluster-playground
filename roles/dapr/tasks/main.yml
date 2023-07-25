@@ -1,0 +1,37 @@
+---
+# ####################################################################
+#                             Pre-check
+# ####################################################################
+
+- name: Init Dapr on {{ dapr_cluster_name }}
+  include_tasks: cluster-pre-check.yml
+  tags:
+    - dapr-install
+    - dapr-uninstall
+
+# ####################################################################
+#                             Init Dapr
+# ####################################################################
+
+- name: Init Dapr on {{ dapr_cluster_name }}
+  include_tasks: install.yml
+  tags:
+    - dapr-install
+
+# ####################################################################
+#                             Dapr components
+# ####################################################################
+
+- name: Install Dapr components on {{ dapr_cluster_name }}
+  include_tasks: components.yml
+  tags:
+    - dapr-components-install
+
+# ####################################################################
+#                             Remove Dapr
+# ####################################################################
+
+- name: Uninstall Dapr from {{ dapr_cluster_name }}
+  include_tasks: uninstall.yml
+  tags:
+    - dapr-uninstall

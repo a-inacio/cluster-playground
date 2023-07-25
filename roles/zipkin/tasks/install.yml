@@ -1,0 +1,68 @@
+---
+- name: Zipkin namespace
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Namespace
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: zipkin
+  tags:
+    - zipkin-install
+
+- name: Zipkin deployment
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Deployment
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: zipkin-deployment
+        namespace: zipkin
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: zipkin
+        template:
+          metadata:
+            labels:
+              app: zipkin
+          spec:
+            containers:
+              - name: zipkin-container
+                image: openzipkin/zipkin # Use the appropriate image tag/version here
+                ports:
+                  - containerPort: 9411 # Port on which Zipkin will be accessible
+  tags:
+    - zipkin-install
+
+- name: Zipkin service
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Service
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: zipkin-service
+        namespace: zipkin
+      spec:
+        selector:
+          app: zipkin
+        ports:
+          - protocol: TCP
+            port: 9411 # Port on which Zipkin will be accessible
+  tags:
+    - zipkin-install
+
+- name: Zipkin installation finished
+  debug:
+    msg: 'Zipkin installation finished.'
+  tags:
+    - zipkin-install

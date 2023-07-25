@@ -1,0 +1,13 @@
+---
+- name: Ensure correct context
+  ansible.builtin.shell: kubectx kind-{{ dapr_cluster_name }}
+  tags:
+    - dapr-install
+    - dapr-uninstall
+
+- name: Ensure correct context finished
+  debug:
+    msg: 'Change kube context to {{ dapr_cluster_name }} finished.'
+  tags:
+    - dapr-install
+    - dapr-uninstall

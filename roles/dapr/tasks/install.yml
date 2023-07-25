@@ -1,0 +1,20 @@
+---
+- name: Check if Dapr is already installed
+  ansible.builtin.shell: dapr status -k
+  ignore_errors: true
+  register: dapr_status_output
+  tags:
+    - dapr-install
+
+- name: Dapr install
+  ansible.builtin.shell: dapr init --kubernetes --wait
+  when: ('❌  No status returned. Is Dapr initialized in your cluster?' in dapr_status_output.stderr_lines)
+  tags:
+    - dapr-install
+
+- name: Dapr install finished
+  debug:
+    msg: 'Dapr install finished.'
+  when: ('❌  No status returned. Is Dapr initialized in your cluster?' in dapr_status_output.stderr_lines)
+  tags:
+    - dapr-install

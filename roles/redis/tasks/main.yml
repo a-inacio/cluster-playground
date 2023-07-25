@@ -1,0 +1,18 @@
+---
+# ####################################################################
+#                             Pre-check
+# ####################################################################
+
+- name: Init Helm for deploying in {{ dapr_cluster_name }}
+  include_tasks: redis-pre-check.yml
+  tags:
+    - redis-install
+
+# ####################################################################
+#                             Install
+# ####################################################################
+
+- name: Install Redis in {{ dapr_cluster_name }}
+  include_tasks: install.yml
+  tags:
+    - redis-install

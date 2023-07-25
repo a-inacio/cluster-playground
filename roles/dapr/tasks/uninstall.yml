@@ -1,0 +1,11 @@
+---
+- name: Dapr uninstall
+  ansible.builtin.shell: dapr uninstall --kubernetes
+  tags:
+    - dapr-uninstall
+
+- name: Dapr uninstall finished
+  debug:
+    msg: 'Dapr uninstall finished.'
+  tags:
+    - dapr-uninstall

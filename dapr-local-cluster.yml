@@ -1,0 +1,12 @@
+---
+- name: Setup Dapr on a Local Kind cluster
+  hosts: "{{ HOSTS | default('localhost') }}"
+
+  roles:
+    - role: kind
+    - role: dapr
+    - role: redis
+    - role: zipkin
+
+  vars_files:
+    - vars/main.yml

@@ -1,0 +1,18 @@
+---
+# ####################################################################
+#                             Create cluster
+# ####################################################################
+
+- name: Create cluster {{ dapr_cluster_name }}
+  include_tasks: create-cluster.yml
+  tags:
+    - create
+
+# ####################################################################
+#                             Delete cluster
+# ####################################################################
+
+- name: Create cluster {{ dapr_cluster_name }}
+  include_tasks: delete-cluster.yml
+  tags:
+    - delete

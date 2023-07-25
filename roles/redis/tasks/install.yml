@@ -1,0 +1,5 @@
+- name: Run helm installation for Redis
+  ansible.builtin.shell: helm install redis bitnami/redis --set image.tag=6.2
+  when: redis_deployment.resources | length == 0
+  tags:
+    - redis-install

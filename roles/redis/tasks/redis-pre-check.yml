@@ -1,0 +1,40 @@
+---
+- name: Ensure correct context
+  ansible.builtin.shell: kubectx kind-{{ dapr_cluster_name }}
+  tags:
+    - redis-install
+
+- name: Ensure correct context finished
+  debug:
+    msg: 'Change kube context to {{ dapr_cluster_name }} finished.'
+  tags:
+    - redis-install
+
+- name: Ensure helm repository
+  ansible.builtin.shell: helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update
+  tags:
+    - redis-install
+
+- name: Retrieve Redis master Pod information
+  community.kubernetes.k8s_info:
+    kind: Pod
+    label_selectors:
+      - app.kubernetes.io/component=master
+      - app.kubernetes.io/instance=redis
+  register: redis_deployment
+  tags:
+    - redis-install
+
+- name: Check if Redis master Pod exists
+  debug:
+    msg: 'Redis is already installed'
+  when: redis_deployment.resources | length > 0
+  tags:
+    - redis-install
+
+- name: Check helm installation for Redis
+  debug:
+    msg: 'Redis needs to be installed'
+  when: redis_deployment.resources | length == 0
+  tags:
+    - redis-install

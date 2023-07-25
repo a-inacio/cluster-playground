@@ -1,0 +1,36 @@
+- name: Forward Kubernetes components cluster port to local
+  hosts: "{{ HOSTS | default('localhost') }}"
+  tasks:
+    - name: Get Zipkin pod name
+      ansible.builtin.shell: kubectl get pods -n zipkin -l app=zipkin -o jsonpath='{.items[0].metadata.name}'
+      register: zipkin_pod_name
+      tags:
+        - start
+
+    - name: Start Zipkin port forwarding
+      ansible.builtin.shell: nohup kubectl port-forward -n zipkin {{ zipkin_pod_name.stdout }} 19411:9411 > /dev/null 2>&1 &
+      tags:
+        - start
+
+    - name: Get Redis master pod name
+      ansible.builtin.shell: kubectl get pods -n default -l app.kubernetes.io/name=redis,app.kubernetes.io/component=master -o jsonpath='{.items[0].metadata.name}'
+      register: redis_master_pod_name
+      tags:
+        - start
+
+    - name: Start Redis port forwarding
+      ansible.builtin.shell: nohup kubectl port-forward -n default {{ redis_master_pod_name.stdout }} 16379:6379 > /dev/null 2>&1 &
+      tags:
+        - start
+
+    - name: Stop Redis port forwarding
+      ansible.builtin.shell: pkill -f 'kubectl port-forward .*redis.* 16379:6379$'
+      ignore_errors: true
+      tags:
+        - stop
+
+    - name: Stop Zipkin port forwarding
+      ansible.builtin.shell: pkill -f 'kubectl port-forward .*zipkin.* 19411:9411$'
+      ignore_errors: true
+      tags:
+        - stop

@@ -1,0 +1,18 @@
+---
+# ####################################################################
+#                             Pre-check
+# ####################################################################
+
+- name: Pre-check cluster {{ dapr_cluster_name }}
+  include_tasks: cluster-pre-check.yml
+  tags:
+    - zipkin-install
+
+# ####################################################################
+#                             Dapr components
+# ####################################################################
+
+- name: Install zipkin on {{ dapr_cluster_name }}
+  include_tasks: install.yml
+  tags:
+    - zipkin-install

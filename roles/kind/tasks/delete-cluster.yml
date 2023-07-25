@@ -1,0 +1,11 @@
+---
+- name: Delete kind cluster
+  shell: 'kind delete cluster --name {{ dapr_cluster_name }}'
+  tags:
+    - delete
+
+- name: Cluster deletion has been finished
+  debug:
+    msg: 'Cluster deletion of kind cluster {{ dapr_cluster_name }} has been finished.'
+  tags:
+    - delete
