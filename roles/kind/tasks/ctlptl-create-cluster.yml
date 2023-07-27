@@ -1,0 +1,25 @@
+---
+- name: Check if kind cluster exists
+  ansible.builtin.shell: kind get clusters
+  register: kind_clusters_output
+  tags:
+    - create
+
+- name: Create kind cluster
+  ansible.builtin.command: kind create cluster --name {{ dapr_cluster_name }} --config={{ playbook_dir }}/files/kind-cluster-config.yml
+  when: not dapr_cluster_name in kind_clusters_output.stdout_lines
+  tags:
+    - create-DEPRECATED-kind
+
+- name: Create kind cluster
+  ansible.builtin.command: ctlptl apply -f {{ playbook_dir }}/files/ctlptl-kind-cluster-config.yml
+  when: not dapr_cluster_name in kind_clusters_output.stdout_lines
+  tags:
+    - create
+
+- name: Cluster creation has been finished
+  debug:
+    msg: 'Cluster creation of kind cluster {{ dapr_cluster_name }} has been finished.'
+  when: not dapr_cluster_name in kind_clusters_output.stdout_lines
+  tags:
+    - create

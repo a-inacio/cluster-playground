@@ -1,2 +1,2 @@
 ---
-dapr_cluster_name: 'dapr-local-cluster'
+dapr_cluster_name: 'dapr'

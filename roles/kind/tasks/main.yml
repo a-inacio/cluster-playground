@@ -4,9 +4,10 @@
 # ####################################################################
 
 - name: Create cluster {{ dapr_cluster_name }}
-  include_tasks: create-cluster.yml
+  include_tasks: ctlptl-create-cluster.yml
   tags:
     - create
+    - create-test
 
 # ####################################################################
 #                             Delete cluster

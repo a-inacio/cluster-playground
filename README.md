@@ -4,13 +4,27 @@
 
 # Requirements
 
-kind:
-`ansible-galaxy collection install community.kubernetes`
+- kind
+- helm
+- ansible
+- tilt
+- ctlptl
+
+## Ansible modules
+```bash
+ansible-galaxy collection install community.kubernetes
+```
+
+## Helm repositories
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
 
 # Usage
 
 ## Install all
 
 ```bash
-sudo ansible-playbook dapr-local-cluster.yml --tags "create, dapr-install, redis-install, zipkin-install, dapr-components-install"
+ansible-playbook dapr-local-cluster.yml --tags "create, dapr-install, redis-install, zipkin-install, dapr-components-install"
 ```

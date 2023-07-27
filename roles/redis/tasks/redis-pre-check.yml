@@ -1,6 +1,6 @@
 ---
 - name: Ensure correct context
-  ansible.builtin.shell: kubectx kind-{{ dapr_cluster_name }}
+  ansible.builtin.shell: kubectl config use-context kind-{{ dapr_cluster_name }}
   tags:
     - redis-install
 
